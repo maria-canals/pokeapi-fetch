@@ -34,18 +34,31 @@
           </select>
     </div>
     <script>
-        function getNewPokemon(event) {
-        // Hacer que cada vez que se cambie el valor del select, se invoque esta función. Hacer una llamada con la Fetch API al endpoint para obtener los pokemons por nombre de pokemon. Debeis usar su nombre de pokemon como parte dinámica de la URL
 
+        document.querySelector('.form-select').addEventListener('change', getNewPokemon); // when we change the value of select, we invoke the getNewPokemon function
+        
+          // fetch API
+            function getNewPokemon(event) {
+            console.log(event)
+            const url = `https://pokeapi.co/api/v2/pokemon/${event.target.value}`;
+            fetch(url).
+            then(response => response.json()).
+            then(data => updatePokemon(data))
         }
 
-        function updatePokemon(response) {
-            // cuando se ha completado el Fetch, este debe hacer una llamada a esta función pasando por parámetro los datos recibidos.
-            // La función debe actualizar los elementos del DOM: imagen del pokemon, nombre, y guardar en algun lugar la ruta a la foto "shiny" del pokemon
+        // change pokemon image src / name / shiny-imgage src
+        function updatePokemon(data) {
+           document.querySelector('.card-img-top').classList.remove("d-none");
+           document.querySelector('.card-img-top').src = data.sprites.front_default;
+           document.querySelector('.card-img-top').setAttribute('data-shiny-url', data.sprites.front_shiny)
+           document.querySelector('.card-title').textContent = data.name;
         }
 
-        function changeToShiny() {
-            // esta función debe ser llamada al hacer clic en el botón "Change to Shiny"; de manera que actualice la imagen a la versión "shiny" del Pokemon
+        document.querySelector('.btn').addEventListener('click', changeToShiny) // when we click on change to shiny button, we invoke the changeToShiny function
+        
+        // change pokemon image src for shiny-image src
+        function changeToShiny(data) {
+            document.querySelector('.card-img-top').src = document.querySelector('.card-img-top').getAttribute('data-shiny-url');
         }
 
     </script>
